@@ -1,15 +1,61 @@
-## Put comments here that give an overall description of what your
-## functions do
+# As shown below these two functions are used to cache the inverse of a matrix.
 
-## Write a short comment describing this function
-
+# makeCacheMatrix creates a list containing a function to
+# => set the value of the matrix
+# => get the value of the matrix
+# => set the value of inverse of the matrix
+# => get the value of inverse of the matrix
 makeCacheMatrix <- function(x = matrix()) {
-
+    inver <- NULL
+    set <- function(y) {
+        x <<- y
+        inver <<- NULL
+    }
+    get <- function() x
+    setinverse <- function(inverse) inver <<- inverse
+    getinverse <- function() inver
+    list(set=set, get=get, setinverse=setinverse, getinverse=getinverse)
 }
 
 
-## Write a short comment describing this function
+## Following function returns a matrix that is the inverse of 'x'
+
 
 cacheSolve <- function(x, ...) {
-        ## Return a matrix that is the inverse of 'x'
+    inver <- x$getinverse()
+    if(!is.null(inver)) {
+        message("getting cached data.")
+        return(inver)
+    }
+    data <- x$get()
+    inver <- solve(data)
+    x$setinverse(inver)
+    inver
+
 }
+
+
+#TEST RUN
+#> source("cachematrix.R")
+#> x = rbind(c(1, -1/2), c(-1/2, 1))
+#> m = makeCacheMatrix(x)
+#> m$get()
+#     [,1] [,2]
+#[1,]  1.0 -0.5
+#[2,] -0.5  1.0
+#> cacheSolve(m)
+#          [,1]      [,2]
+#[1,] 1.3333333 0.6666667
+#[2,] 0.6666667 1.3333333
+#> cacheSolve(m)
+#getting cached data.
+#          [,1]      [,2]
+#[1,] 1.3333333 0.6666667
+#[2,] 0.6666667 1.3333333
+#> cacheSolve(m)
+#getting cached data.
+#          [,1]      [,2]
+#[1,] 1.3333333 0.6666667
+#[2,] 0.6666667 1.3333333
+#> 
+
